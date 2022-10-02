@@ -5,10 +5,6 @@ import os
 #Objets
 Instructions = InstructionsClass("test.txt")
 
-#Compiler
-os.system('cls')
-user_input = input("Ingrese dir: ")
-Instructions.setFile(user_input)
-os.system('cls')
-print(Instructions.getFile())
+for i in range(Instructions.getNumLines()):
+    print(i+Instructions.getStarCode(), Instructions.getInstruction(i))
 
