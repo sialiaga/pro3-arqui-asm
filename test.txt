@@ -6,7 +6,7 @@ DATA:
 CODE:
 siguiente:
   MOV B,(lista)
-  MOV A,(B)
+  MOV A
   INK B
   MOV B,(B)
   CMP A,B

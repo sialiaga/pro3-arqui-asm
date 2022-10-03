@@ -1,0 +1,16 @@
+DATA:
+  lista #A0
+  n 5
+  res 0
+  aux 0
+CODE:
+siguiente:
+  MOV B,(lista)
+  MOV A,(B)
+  INC B
+  MOV B,(B)
+  CMP A,B
+  JGE comparar
+  MOV (aux),A
+  MOV A,B
+  MOV B,(aux)

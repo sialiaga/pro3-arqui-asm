@@ -7,4 +7,13 @@ Instructions = InstructionsClass("test.txt")
 
 for i in range(Instructions.getNumLines()):
     print(i+Instructions.getStarCode(), Instructions.getInstruction(i))
+print(Instructions.getCountError())
+
+# aux = input("dir:")
+
+# Instructions.setFile(aux)
+# for i in range(Instructions.getNumLines()):
+#     print(i+Instructions.getStarCode(), Instructions.getInstruction(i))
+# print(Instructions.getCountError())
+
 
