@@ -15,7 +15,7 @@ class InstructionsClass:
         
         self.numLines = 0
         self.starCode = 0
-        self.countErrors = 0
+        self.posErrors = []
     
      #check if file exist
     def checkFile(self, _fileDir):
@@ -24,7 +24,7 @@ class InstructionsClass:
             self.fileRead = False
             self.intructions_line = {}
             self.jumps = {}
-            self.countErrors = 0
+            self.posErrors = []
             self.fileDir = _fileDir
             return 0
         else: #file not exist
@@ -69,7 +69,7 @@ class InstructionsClass:
                     
                     else: #line with error
                         self.intructions_line[count_line] = {"type":"ERR", "error":"not found instruction", "error_val":aux_line.group(1)}
-                        self.countErrors += 1
+                        self.posErrors.append(count_line)
                 
                 count_line += 1
             
@@ -86,11 +86,11 @@ class InstructionsClass:
 
     def __obtainArguments(self, line, instruction, arguments):
         path = re.compile(defs.get_re(instruction))
-        print(path.match(arguments))
         if path.match(arguments) != None and arguments[-1:] != ",":
             self.intructions_line[line] = {"type":instruction, "args":arguments.split(",")}
         else:
             self.intructions_line[line] = {"type":"ERR", "error":"invalid arguments", "error_val":arguments}
+            self.posErrors.append(line)
         
         
     #redefine file directory
@@ -131,9 +131,9 @@ class InstructionsClass:
         self.obtainInstructions()
         return self.jumps[label]
 
-    def getCountError(self):
+    def getPosError(self):
         self.obtainInstructions()
-        return self.countErrors
+        return self.posErrors
 
 
     
