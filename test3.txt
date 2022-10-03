@@ -1,0 +1,66 @@
+DATA:
+  inicio #A0
+  filas 3
+  cols 6
+  saturados 0
+  currmin 255
+  currmax 0
+  currcom 0
+  counter 0
+CODE:
+count:
+  MOV A,(cols)
+  MOV B,0
+  ADD (counter)
+  MOV A,(filas)
+  SUB A,1
+  MOV (filas),A
+  CMP A,0
+  JGT count
+  MOV A,(inicio)
+  ADD (counter)
+  MOV B,(inicio)
+siguiente:
+  MOV A,255
+  MOV (currmin),A
+  RST (currmax)
+  CALL minmax
+  SUB (currcom)
+  MOV A,(currcom)
+  RST (currcom)
+  CMP A,150
+  JLE revisar
+  INC (saturados)
+revisar:
+  MOV B,(inicio)
+  CMP B,(counter)
+  JLT siguiente
+  JMP final
+minmax:
+  MOV A,(currmin)
+  CMP A,(B)
+  JGT min
+  MOV A,(currmax)
+  CMP A,(B)
+  JLT max
+  INC B
+  INC (currcom)
+  MOV (inicio),B
+  MOV A,(currcom)
+  CMP A,3
+  JLT minmax
+  RST (currcom)
+  MOV A,(currmax)
+  MOV B,(currmin)
+  JMP finminmax
+min:
+  MOV A,(B)
+  MOV (currmin),A
+  JMP minmax
+max:
+  MOV A,(B)
+  MOV (currmax),A
+  JMP minmax
+finminmax:
+  RET
+final:
