@@ -40,7 +40,7 @@ class InstructionsClass:
         code_start = False
         count_line = 1
         aux_line = ""
-        path_line = re.compile(r'([a-zA-Z]{2,4}) (.*)')
+        path_line = re.compile(r'([a-zA-Z]{2,4}) ?(.*)')
 
         cln = lambda line:line.replace("\n", "")
 

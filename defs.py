@@ -12,7 +12,7 @@ label_DATA = {  "MOV":{"re":r"((A),(B))|((B),(A))|(([A|B]),(\([A-Za-z]*\)))|((\(
                 "RST":{"re":r"(\([^A][A-Za-z]+\))"},
                 "CMP":{"re":r"((A),(B))|(A),(\([A-Za-z]*\))|((B),(\([^B][A-Za-z]*\)))|(\([^B][A-Za-z]+\))|(([A|B]),([0-9]+))"},
                 "CALL":{"re":r"\w*"},
-                "RET":{"re":None},
+                "RET":{"re":r".*"},
                 "PUSH":{"re":r"[A|B]"},
                 "POP":{"re":r"[A|B]"},
                 "JMP":{"re":r"\w*"},
