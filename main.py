@@ -10,7 +10,9 @@ Instructions.setFile(file)
 
 for i in Instructions.getPosError():
     aux = Instructions.getInstruction(i)
-    print(aux["type"], ": ", aux["error"], " ", aux["error_val"])
+    print(aux["type"], ": ", aux["error"], " ", aux["error_val"], "- line:", i+Instructions.getStarCode())
+
+if len(Instructions.getPosError()) == 0: print("Not errors founded")
 
 # aux = input("dir:")
 
