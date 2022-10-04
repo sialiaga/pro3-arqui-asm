@@ -17,6 +17,6 @@ for i in Instructions.getPosError():
 # Instructions.setFile(aux)
 for i in range(Instructions.getNumLines()):
     print(i+Instructions.getStarCode(), Instructions.getInstruction(i))
-print(Instructions.getPosError())
+print(list(errorline+Instructions.getStarCode() for errorline in Instructions.getPosError()))
 
 
