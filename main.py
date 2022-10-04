@@ -15,8 +15,8 @@ for i in Instructions.getPosError():
 # aux = input("dir:")
 
 # Instructions.setFile(aux)
-for i in range(Instructions.getNumLines()):
-    print(i+Instructions.getStarCode(), Instructions.getInstruction(i))
-print(list(errorline+Instructions.getStarCode() for errorline in Instructions.getPosError()))
+# for i in range(Instructions.getNumLines()):
+#     print(i+Instructions.getStarCode(), Instructions.getInstruction(i))
+# print(list(errorline+Instructions.getStarCode() for errorline in Instructions.getPosError()))
 
 
