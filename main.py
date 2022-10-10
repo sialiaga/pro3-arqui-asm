@@ -5,7 +5,7 @@ import os
 #Objets
 Instructions = InstructionsClass()
 file = input("ingrese archivo: ")
-aux = ""
+# aux = ""
 Instructions.setFile(file)
 
 for i in Instructions.getPosError():
@@ -18,7 +18,8 @@ if len(Instructions.getPosError()) == 0: print("Not errors founded")
 
 # Instructions.setFile(aux)
 # for i in range(Instructions.getNumLines()):
-#     print(i+Instructions.getStarCode(), Instructions.getInstruction(i))
+#     print(i, Instructions.getInstruction(i))
 # print(list(errorline+Instructions.getStarCode() for errorline in Instructions.getPosError()))
+print(Instructions.export("intrus_out"))
 
 

@@ -1,33 +1,52 @@
 import re
-label_DATA = {  "MOV":{"re":r"(A),(B)|(B),(A)|([A|B]),(\([A-Za-z]*\))|(\([^A][^B][A-Za-z]*\)),([A|B])|(\([^A][A-Za-z]*\)),([A])|([A|B]),([0-9]+)"},
-                "ADD":{"re":r"((A),(B))|(B),(A)|(A),(\([^A][A-Za-z]*\))|((B),(\([^B][A-Za-z]*\)))|(\([^B][^A][A-Za-z]*\))|(([A|B]),([0-9]+))"},
-                "SUB":{"re":r"((A),(B))|(B),(A)|(A),(\([^A][A-Za-z]*\))|((B),(\([^B][A-Za-z]*\)))|(\([^B][^A][A-Za-z]*\))|(([A|B]),([0-9]+))" },
-                "AND":{"re":r"((A),(B))|(B),(A)|(A),(\([^A][A-Za-z]*\))|((B),(\([^B][A-Za-z]*\)))|(\([^B][^A][A-Za-z]*\))|(([A|B]),([0-9]+))"},
-                "OR":{"re":r"((A),(B))|(B),(A)|(A),(\([A-Za-z]*\))|((B),(\([^B][A-Za-z]*\)))|(\([^B][A-Za-z]*\))|(([A|B]),([0-9]+))"},
-                "NOT":{"re":r"((A|B),(A|B))|(\([A-Za-z]*\)),(A|B)|(\([B]\))"},
-                "XOR":{"re":r"((A),(B))|(B),(A)|(A),(\([^A][A-Za-z]*\))|((B),(\([^B][A-Za-z]*\)))|(\([^B][^A][A-Za-z]*\))|(([A|B]),([0-9]+))"},
-                "SHL":{"re":r"((A|B),(A|B))|(\([A-Za-z]*\)),(A|B)|(\([B]\))"},
-                "SHR":{"re":r"((A|B),(A|B))|(\([A-Za-z]*\)),(A|B)|(\([B]\))"},
-                "INC":{"re":r"(\([^A][A-Za-z]*\))|\(?[B]\)?"},
-                "RST":{"re":r"(\([^A][A-Za-z]*\))"},
-                "CMP":{"re":r"((A),(B))|(A),(\([A-Za-z]*\))|((B),(\([^B][A-Za-z]*\)))|(\([^B][A-Za-z]*\))|(([A|B]),([0-9]+))"},
-                "CALL":{"re":r"\w*"},
-                "RET":{"re":r".*"},
-                "PUSH":{"re":r"[A|B]"},
-                "POP":{"re":r"[A|B]"},
-                "JMP":{"re":r"\w*"},
-                "JEQ":{"re":r"\w*"},
-                "JNE":{"re":r"\w*"},
-                "JGT":{"re":r"\w*"},
-                "JLT":{"re":r"\w*"},
-                "JGE":{"re":r"\w*"},
-                "JLE":{"re":r"\w*"},
-                "JCR":{"re":r"\w*"},
-                "JOV":{"re":r"\w*"}}
 
-def in_labels(label):
-    if label in label_DATA: return True
-    else: return False
+def check_intru(sent):
+    data = open("instructions.dat", "r")
+    for seq in data:
+        aux_seq = seq.replace("\n", "").split(";")
+        path = re.compile(aux_seq[0])
+        aux_match = path.match(sent)
+        if aux_match != None and aux_match.group() == sent:
+            aux_group = aux_match.group().split(" ")
+            return [1, aux_group[0], aux_group[1].split(","), aux_seq[1]]
+    data.close()
+    data = open("allinstrus.dat", "r")
+    for intru in data:
+        aux_sent = sent.split(" ")
+        if aux_sent[0] == intru.replace("\n", ""):
+            return [0, "argument error", aux_sent[1]]
+    return [0, "instruction error", sent.split(" ")[0]]
 
-def get_re(label):
-    return label_DATA[label]["re"]
+def translate(intru):
+    data = open("opcodewlit.dat", "r")
+    aux_value = "00000000"
+    for wlit in data:
+        if intru["opcode"] == wlit.replace("\n", ""):
+            for args in intru['arg']:
+                aux_arg = args.replace("(", "").replace(")", "").replace("#", "")
+                if aux_arg[:2] == "0x":
+                    aux_value = int(aux_arg, 16)
+                    aux_value = str(bin(aux_value))[2:]
+                    aux_value = "0"*(8-len(aux_value)) + aux_value
+                elif aux_arg[:2] == "0b":
+                    aux_value = aux_arg[2:]
+                    aux_value = "0"*(8-len(aux_value)) + aux_value
+                else:
+                    try:
+                        aux_value = str(bin(int(aux_arg)))[2:]
+                        aux_value = "0"*(8-len(aux_value)) + aux_value
+                    except:
+                        pass
+    return intru["opcode"] + aux_value
+
+    
+
+        
+
+if __name__ == "__main__":
+    i1 = {'type': 'MOV', 'arg': ['A', 'B'], 'opcode': '0000000'}
+    i2 = {'type': 'SUB', 'arg': ['A', '12'], 'opcode': '0001010'}
+    i3 = {'type': 'JLE', 'arg': ['#0x0a'], 'opcode': '1011001'}
+    i4 = {'type': 'CMP', 'arg': ['A', '0b01'], 'opcode': '1001110'}
+    i5 = {'type': 'MOV', 'arg': ['A', "(#12)"], 'opcode': '0100101'}
+    print(translate(i5))

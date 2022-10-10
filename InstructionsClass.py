@@ -1,6 +1,5 @@
 from os.path import exists
-import re
-import defs
+import defs as d
 
 class InstructionsClass:
     #constructor
@@ -39,7 +38,6 @@ class InstructionsClass:
         code_start = False
         count_line = 1
         aux_line = ""
-        path_line = re.compile(r'([a-zA-Z]{2,4}) ?(.*)')
 
         cln = lambda line:line.replace("\n", "")
 
@@ -53,22 +51,21 @@ class InstructionsClass:
                     self.jumps[cln(line)[:-1]] = count_line
                 
                 else: #Instruction line
-                    aux_line = cln(line) #Aux line to clean
+                    aux_line = "" #Aux line to clean
+                    read_line = 0
+                    for c in cln(line):
+                        if c != " " and read_line == 0:
+                            read_line = 1
+                        if read_line == 1:
+                            aux_line += c
                     
-                    #check if line have a tab
-                    if aux_line[0:2] == "  ": #remove tab
-                        aux_line[2:]
-                    
-                    #-re"" to search <instruction> <arguments>
-                    aux_line = path_line.search(aux_line) 
-                    
-                    #check if instruction exist
-                    if defs.in_labels(aux_line.group(1)): #line is correct
-                        self.__obtainArguments(count_line, aux_line.group(1), aux_line.group(2))
-                    
-                    else: #line with error
-                        self.intructions_line[count_line] = {"type":"ERR", "error":"not found instruction", "error_val":aux_line.group(1)}
+                    re_result = d.check_intru(aux_line)
+                    if re_result[0] == 1:
+                        self.intructions_line[count_line] = {"type":re_result[1], "arg":re_result[2], "opcode":re_result[3]}
+                    else:
+                        self.intructions_line[count_line] = {"type":"ERR", "error":re_result[1], "conflict":re_result[2]}
                         self.posErrors.append(count_line)
+                    
                 
                 count_line += 1
             
@@ -82,16 +79,16 @@ class InstructionsClass:
                 count_line += 1
 
         self.numLines = count_line
+    
+    def export(self, name_file_to_export):
+        self.obtainInstructions()
+        if len(self.posErrors) != 0: return "ERR: Presencia de errores - Imposible crear .out"
+        w = open(name_file_to_export+".out", "w")
+        for intru in self.intructions_line:
+            w.write(d.translate(self.intructions_line[intru])+"\n")
+        w.close()
+        return "INFO: Archivo .out creado con exito"
 
-    def __obtainArguments(self, line, instruction, arguments):
-        path = re.compile(defs.get_re(instruction))
-        if path.match(arguments) != None and arguments[-1:] != ",":
-            self.intructions_line[line] = {"type":instruction, "args":arguments.split(",")}
-        else:
-            self.intructions_line[line] = {"type":"ERR", "error":"invalid arguments", "error_val":arguments}
-            self.posErrors.append(line)
-        
-        
     #redefine file directory
     def setFile(self, _fileDir):
         self.checkFile(_fileDir)
