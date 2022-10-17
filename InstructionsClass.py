@@ -14,9 +14,12 @@ class InstructionsClass:
         self.numLines = 0
         self.starCode = 0
         self.posErrors = []
+        
+        open("./temp/jumps.log", "w").close()
     
      #check if file exist
     def checkFile(self, _fileDir):
+        if self.fileRead == True: return
         
         if (exists(_fileDir)): #File exist
             self.fileRead = False
@@ -29,6 +32,32 @@ class InstructionsClass:
             print("\"",_fileDir, "\" File not found")
             return -1
     
+    def obtainJump(self):
+
+        code_start = False
+        count_line = 0
+        aux_line = ""
+
+        cln = lambda line:line.replace("\n", "")
+
+        file = open(self.fileDir, "r")
+        
+        for line in file:
+            if code_start == True: # "CODE:" was found
+                
+                if cln(line)[-1:] == ":": #Jump Position
+                    jw = open("./temp/jumps.log", "a")
+                    jw.write(f"{cln(line)[:-1]};{count_line}\n")
+                    jw.close()
+                
+                else: #Instruction line
+                    count_line += 1
+            
+            elif cln(line) == "CODE:": #now code start is found, to after 
+                code_start = True
+
+        self.numLines = count_line
+
     #obtain and check if instructions is correct
     def obtainInstructions(self):
         if self.fileRead == True: return
@@ -41,16 +70,13 @@ class InstructionsClass:
 
         cln = lambda line:line.replace("\n", "")
 
+        self.obtainJump()
+
         file = open(self.fileDir, "r")
 
         for line in file:
             if code_start == True: # "CODE:" was found
-                
-                if cln(line)[-1:] == ":": #Jump Position
-                    self.intructions_line[count_line] = {"type":"POS"}
-                    self.jumps[cln(line)[:-1]] = count_line
-                
-                else: #Instruction line
+                if cln(line)[-1:] != ":": #Skip Jump Position
                     aux_line = "" #Aux line to clean
                     read_line = 0
                     for c in cln(line):
@@ -61,17 +87,16 @@ class InstructionsClass:
                     
                     re_result = d.check_intru(aux_line)
                     if re_result[0] == 1:
-                        self.intructions_line[count_line] = {"type":re_result[1], "arg":re_result[2], "opcode":re_result[3]}
+                        self.intructions_line[count_line] = {"type":re_result[1], "arg":re_result[2], "opcode":re_result[3], "lit":re_result[4]}
                     else:
                         self.intructions_line[count_line] = {"type":"ERR", "error":re_result[1], "conflict":re_result[2]}
                         self.posErrors.append(count_line)
                     
-                
-                count_line += 1
+                    count_line += 1
             
             elif cln(line) == "CODE:": #now code start is found, to after read the instructions lines
                 code_start = True
-                self.starCode = count_line + 1
+                self.starCode = count_line
                 count_line = 0
             
             #use to count lines in the start of the file
@@ -81,17 +106,18 @@ class InstructionsClass:
         self.numLines = count_line
     
     def export(self, name_file_to_export):
+        if self.checkFile(self.fileDir) == -1: return "ERR :  Presencia de errores - Imposible crear .out"
         self.obtainInstructions()
-        if len(self.posErrors) != 0: return "ERR: Presencia de errores - Imposible crear .out"
-        w = open(name_file_to_export+".out", "w")
+        if len(self.posErrors) != 0: return "ERR :  Presencia de errores - Imposible crear .out"
+        w = open("./out/"+name_file_to_export+"_out.out", "w")
         for intru in self.intructions_line:
-            w.write(d.translate(self.intructions_line[intru])+"\n")
+            w.write(self.intructions_line[intru]['opcode']+self.intructions_line[intru]['lit']+"\n")
         w.close()
         return "INFO: Archivo .out creado con exito"
 
     #redefine file directory
     def setFile(self, _fileDir):
-        self.checkFile(_fileDir)
+        return self.checkFile(_fileDir)
 
     #obtain file directory
     def getFile(self):
@@ -129,6 +155,7 @@ class InstructionsClass:
 
     def getPosError(self):
         self.obtainInstructions()
+        if self.checkFile(self.fileDir) == -1: return
         return self.posErrors
 
 
