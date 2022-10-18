@@ -1,5 +1,5 @@
 DATA:
- inicio 0
+ inicio 3
  fin 12
  nimpar 0
 CODE:

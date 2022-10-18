@@ -1,6 +1,6 @@
 DATA:
-  inicio 0
-  largo 20
+  inicio 8
+  largo 10
   fourless 15
   counter 0
   currminindex 0
