@@ -1,7 +1,7 @@
 DATA:
-    inicio
-    filas
-    cols
+    inicio 0
+    filas 10
+    cols 10
     saturados 0
     currmin 255
     currmax 0

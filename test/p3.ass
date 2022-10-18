@@ -1,12 +1,12 @@
 DATA:
-  inicio
-  largo
+  inicio 0
+  largo 20
   fourless 15
-  counter
-  currminindex
+  counter 0
+  currminindex 0
   currmin 15
-  next
-  andres
+  next 0
+  andres 0
 CODE:
   MOV B,(inicio)
   MOV A,(largo)

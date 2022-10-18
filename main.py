@@ -34,5 +34,6 @@ while True:
     print(Instructions.export(file_name))
     break
 
-
+open("./temp/memory.log", "w").close()
+open("./temp/jumps.log", "w").close()
 
