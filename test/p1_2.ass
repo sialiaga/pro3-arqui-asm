@@ -1,0 +1,26 @@
+DATA:
+ inicio 0
+ largo 5
+ res 1
+CODE:
+siguiente:
+ MOV B,(inicio)
+ ADD B,(largo)
+ MOV A,B
+ SUB A,1
+ MOV B,A
+ MOV A,(B)
+ MOV B,(inicio)
+ MOV B,(B)
+ CMP A,B
+ JEQ revisar
+ RST (res)
+ JMP final
+revisar:
+ INC (inicio)
+ MOV A,(largo)
+ SUB A,2
+ MOV (largo),A
+ CMP A,1
+ JGT siguiente
+final:

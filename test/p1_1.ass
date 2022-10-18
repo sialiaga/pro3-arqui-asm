@@ -1,0 +1,20 @@
+DATA:
+ inicio 0
+ fin 12
+ nimpar 0
+CODE:
+siguiente:
+ MOV B,(inicio)
+ MOV A,(B)
+ AND A,1
+ CMP A,0
+ JEQ revisar
+ INC (nimpar)
+revisar:
+ INC (inicio)
+ MOV B,(inicio)
+ MOV A,B
+ MOV B,(fin)
+ CMP A,B
+ JLE siguiente
+ MOV A,(nimpar)

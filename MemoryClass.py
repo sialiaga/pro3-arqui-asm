@@ -4,9 +4,8 @@ import re
 
 class MemoryClass:
     #constructor
-    def __init__(self, _fileDir=False):
-        self.fileDir = ""
-        if _fileDir != False: self.setFile(_fileDir)
+    def __init__(self, _fileDir):
+        self.fileDir = _fileDir
         
         self.memories = {}
         self.posErrors = []
@@ -15,26 +14,9 @@ class MemoryClass:
         
         open("./temp/memory.log", "w").close()
     
-     #check if file exist
-    def checkFile(self, _fileDir):
-        if self.fileRead == True: return
-        
-        if (exists(_fileDir)): #File exist
-            self.memories = {}
-            self.posErrors = []
-            self.fileRead = False
-            self.fileDir = _fileDir
-            return 0
-        else: #file not exist
-            print("\"",_fileDir, "\" File not founded")
-            return -1
-    
+
     #obtain and check if Memory is correct
     def obtainMemory(self):
-        if self.fileRead == True: return
-        if self.checkFile(self.fileDir) == -1: return
-        self.fileRead = True
-
         count_data = 0
         code_start =  False
         aux_line = ""
@@ -44,6 +26,7 @@ class MemoryClass:
         cln = lambda line:line.replace("\n", "")
 
         file = open(self.fileDir, "r")
+        mw = open("./temp/memory.log", "a")
 
         for line in file:
             if cln(line) == "CODE:": #Star Code need end
@@ -66,6 +49,10 @@ class MemoryClass:
                         aux_value = d.translate([aux_line.split(" ")[1]],"mem")
                         if aux_value[0]:
                             self.memories[count_data] = {"name":aux_line.split(" ")[0], "value":aux_value[1]}
+                            mw = open("./temp/memory.log", "a")
+                            aux_fstring = aux_line.split(" ")[0]
+                            mw.write(f"{aux_fstring};{aux_value[1]}\n")
+                            mw.close()
                             self.posErrors.pop(self.posErrors.index(count_data))
                         else:
                             self.memories[count_data] = {"name":"ERR","case":aux_line.split(" ")[1],"type":aux_value[2]}
@@ -76,33 +63,21 @@ class MemoryClass:
                 count_data = 0
     
     def export(self, name_file_to_export):
-        if self.checkFile(self.fileDir) == -1: return "ERR :  Presencia de errores - Imposible crear .out"
-        self.obtainMemory()
-        if len(self.posErrors) != 0: return "ERR :  Presencia de errores - Imposible crear .out"
         w = open("./out/"+name_file_to_export+"_mem.mem", "w")
+        for mem in self.memories:
+            w.write(self.memories[mem]["value"]+"\n")
+        w = open("./out/"+name_file_to_export+"_mem.mem", "w")
+        return "INFO: Archivo .mem creado con exito"
         
 
-    #redefine file directory
-    def setFile(self, _fileDir):
-        return self.checkFile(_fileDir)
-
-    #obtain file directory
-    def getFile(self):
-        return self.fileDir
-    
-    #return dictionary with all Memories
     def getAllMemory(self):
-        self.obtainMemory()
         return self.memories
 
-    #return instruction in line "num_mem" passed
     def getMemory(self, num_mem):
-        self.obtainMemory()
         return self.memories[num_mem]
 
     #return error position
     def getPosError(self):
-        self.obtainMemory()
         return self.posErrors
 
 

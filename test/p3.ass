@@ -1,0 +1,57 @@
+DATA:
+  inicio
+  largo
+  fourless 15
+  counter
+  currminindex
+  currmin 15
+  next
+  andres
+CODE:
+  MOV B,(inicio)
+  MOV A,(largo)
+  ADD (counter)
+  MOV (next),B
+siguiente:
+  MOV B,(next)
+  MOV A,(B)
+  MOV (currmin),A
+  CALL numindex
+  MOV B,(next)
+  MOV A,(B)
+  CMP A,(currmin)
+  JEQ noswap
+  MOV B,(next)
+  MOV A,(B)
+  MOV B,(currminindex)
+  MOV (B),A
+  MOV A,(currmin)
+  MOV B,(next)
+  MOV (B),A
+noswap:
+  INC (next)
+  MOV B,(next)
+  INC B
+  CMP B,(counter)
+  JLT siguiente
+  JMP fin
+numindex:
+  MOV A,(B)
+  AND A,(fourless)
+  MOV (andres),A
+  MOV A,(currmin)
+  AND A,(fourless)
+  CMP A,(andres)
+  JGT min
+  INC B
+  CMP B,(counter)
+  JLT numindex
+  JMP finnumindex
+min:
+  MOV A,(B)
+  MOV (currmin),A
+  MOV (currminindex),B
+  JMP numindex
+finnumindex:
+  RET  
+fin:

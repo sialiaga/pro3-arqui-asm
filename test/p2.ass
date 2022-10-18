@@ -35,6 +35,7 @@ revisar:
     MOV B,(inicio)
     CMP B,(counter)
     JLT siguiente
+    JMP final
 minmax:
     MOV A,(currmin)
     CMP A,(B)
@@ -61,4 +62,5 @@ max:
     MOV (currmax),A
     JMP minmax
 finminmax:
-    RET 0
+    RET  
+final:

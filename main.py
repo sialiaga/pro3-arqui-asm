@@ -1,4 +1,6 @@
 #Imports
+from ast import Break
+from pickle import TRUE
 from re import M
 from InstructionsClass import *
 from MemoryClass import *
@@ -10,27 +12,27 @@ import os
 
 file = input("ingrese archivo: ")
 Instructions = InstructionsClass(file)
-Memory = MemoryClass()
+Memory = MemoryClass(file)
 
+file_name = (file.split("/")[-1:])[0].split(".")[0]
 
-# if Memory.setFile(file) != -1:
-#     print(Memory.getAllMemory())
-#     print(Memory.getPosError())
-#     print(Memory.getSizeData)
+while True:
+    Memory.obtainMemory()
+    for i in Memory.getPosError():
+        aux = Memory.getMemory(i)
+        print("DATA -",aux['name'], ": ", aux["type"], " ", aux["case"])
 
-Instructions.obtainInstructions()
+    Instructions.obtainInstructions()
+    for i in Instructions.getPosError():
+        aux = Instructions.getInstruction(i)
+        print("CODE -", aux["type"], ": ", aux["error"], "- line:", i)
 
-for i in Instructions.getPosError():
-    aux = Instructions.getInstruction(i)
-    print(aux["type"], ": ", aux["error"], " ", aux["conflict"], "- line:", i+Instructions.getStarCode())
-
-if len(Instructions.getPosError()) == 0: print("Not errors founded")
-
-
-for i in range(Instructions.getNumLines()):
-    print(i, Instructions.getInstruction(i))
-
-print(Instructions.export("instructions"))
+    if len(Instructions.getPosError()) == 0 and len(Memory.getPosError()) == 0: print("Not errors founded")
+    else: break
+    
+    print(Memory.export(file_name))
+    print(Instructions.export(file_name))
+    break
 
 
 

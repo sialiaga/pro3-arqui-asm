@@ -48,6 +48,7 @@ def translate(argument, opcode):
                     except:
                         pass
     data.close()
+    
     data = open("./dat/opcodespecial.dat", "r")
     data_jump = open("./temp/jumps.log", "r")
     for spec in data:
@@ -63,6 +64,23 @@ def translate(argument, opcode):
             return [0, aux_arg, "Label not exist"]
     data.close()
     data_jump.close()
+
+    data = open("./dat/opcodespecial.dat", "r")
+    data_mem = open("./temp/memory.log", "r")
+    for spec in data:
+        aux_spec = spec.replace("\n", "").split(";")
+        if opcode == aux_spec[1] and "memory"==aux_spec[0]:
+            for mem in data_mem:
+                aux_mem = mem.replace("\n", "").split(";")
+                for args in argument:
+                    aux_arg = args.replace("(", "").replace(")", "")
+                    if aux_mem[0]==aux_arg:
+                        return [1, aux_mem[1]]
+            
+            return [0, aux_arg, "Label not exist"]
+    data.close()
+    data_jump.close()
+
     return [1, aux_value]
 
 def check_intru(sent):
@@ -85,7 +103,6 @@ def check_intru(sent):
     for intru in data:
         aux_sent = sent.split(" ")
         if aux_sent[0] == intru.replace("\n", ""):
-            print(aux_sent)
             return [0, "argument error", aux_sent[1]]
     return [0, "instruction error", sent.split(" ")[0]]
 

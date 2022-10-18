@@ -61,7 +61,6 @@ class InstructionsClass:
                             read_line = 1
                         if read_line == 1:
                             aux_line += c
-                    
                     re_result = d.check_intru(aux_line)
                     if re_result[0] == 1:
                         self.intructions_line[count_line] = {"type":re_result[1], "arg":re_result[2], "opcode":re_result[3], "lit":re_result[4]}
@@ -83,7 +82,6 @@ class InstructionsClass:
         self.numLines = count_line
     
     def export(self, name_file_to_export):
-        if len(self.posErrors) != 0: return "ERR :  Presencia de errores - Imposible crear .out"
         w = open("./out/"+name_file_to_export+"_out.out", "w")
         for intru in self.intructions_line:
             w.write(self.intructions_line[intru]['opcode']+self.intructions_line[intru]['lit']+"\n")
