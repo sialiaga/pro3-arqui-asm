@@ -6,7 +6,7 @@ def translate(argument, opcode): #Argument is translate a 8bit value in lit or d
 
     overflow = lambda value : 0 if value<256 else 1 #check overflow
     overflow_c2 = lambda value : 0 if value<128 else 1 #check overflow in c'2 case
-    bin8coverter = lambda value :"0"*(8-len(value)) + value #transform binary diferente of 8bit to a 8bit binary
+    bin8coverter = lambda value :"0"*(8-len(value)) + value if len(value) <= 8 else value[-8:] #transform binary diferente of 8bit to a 8bit binary
 
     #Thanks to user AJP in https://www.kutombawewe.net/es/python/complemento-binario-de-dos-en-python/1069168616/amp/
     c2binary = lambda x, count=8: "".join(map(lambda y:str((x>>y)&1), range(count-1, -1, -1)))  #Use to pass negative value to c'2 value
