@@ -14,7 +14,7 @@ class InstructionsClass:
         self.posErrors = []
         
         open("./temp/jumps.log", "w").close()
-    
+    #Obtain jumps and put in a file, later use in other programs
     def obtainJump(self):
         code_start = False
         count_line = 0
@@ -79,6 +79,7 @@ class InstructionsClass:
 
         self.numLines = count_line
     
+    #create .out
     def export(self, name_file_to_export):
         w = open("./out/"+name_file_to_export+"_out.out", "w")
         for intru in self.intructions_line:
@@ -111,6 +112,7 @@ class InstructionsClass:
     def getJump(self, label):
         return self.jumps[label]
 
+    #return position of erors
     def getPosError(self):
         return self.posErrors
 

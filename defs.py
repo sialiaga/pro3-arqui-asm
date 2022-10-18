@@ -1,19 +1,19 @@
 import re
 
-def translate(argument, opcode):
-    aux_value = "00000000"
+def translate(argument, opcode): #Argument is translate a 8bit value in lit or dir case
+    aux_value = "00000000" #main value, persist in the case that opcode not in lit or dir opcode cases
 
     notFoundLabel = 1
     notFoundMemory = 1
 
-    overflow = lambda value : 0 if value<256 else 1
-    overflow_c2 = lambda value : 0 if value<128 else 1
-    bin8coverter = lambda value :"0"*(8-len(value)) + value
+    overflow = lambda value : 0 if value<256 else 1 #check overflow
+    overflow_c2 = lambda value : 0 if value<128 else 1 #check overflow in c'2 case
+    bin8coverter = lambda value :"0"*(8-len(value)) + value #transform binary diferente of 8bit to a 8bit binary
 
     #Thanks to user AJP in https://www.kutombawewe.net/es/python/complemento-binario-de-dos-en-python/1069168616/amp/
-    c2binary = lambda x, count=8: "".join(map(lambda y:str((x>>y)&1), range(count-1, -1, -1))) 
+    c2binary = lambda x, count=8: "".join(map(lambda y:str((x>>y)&1), range(count-1, -1, -1)))  #Use to pass negative value to c'2 value
 
-    data = open("./dat/opcodespecial.dat", "r")
+    data = open("./dat/opcodespecial.dat", "r") #Only need know if the opcode use a lit to translate this lit
     for spec in data:
         aux_spec = spec.replace("\n", "").split(";")
         if (opcode == aux_spec[1] and "lit"==aux_spec[0]) or opcode == "mem":
@@ -34,7 +34,7 @@ def translate(argument, opcode):
                     return [1, aux_value]
                 #Decimal Case
                 else:
-                    try:
+                    try: 
                         aux_value = int(aux_arg)
                         if aux_value < 0:
                             if overflow_c2(abs(aux_value)): return [0, aux_arg, "Overflow Literal"]
@@ -49,6 +49,7 @@ def translate(argument, opcode):
                         pass
     data.close()
     
+    #Jump case, use a aux file to obtain the dir of jumps
     data = open("./dat/opcodespecial.dat", "r")
     data_jump = open("./temp/jumps.log", "r")
     for spec in data:
@@ -65,6 +66,7 @@ def translate(argument, opcode):
     data.close()
     data_jump.close()
 
+    #Jump case, use a aux file to obtain the dir of data
     data = open("./dat/opcodespecial.dat", "r")
     data_mem = open("./temp/memory.log", "r")
     for spec in data:
@@ -81,10 +83,12 @@ def translate(argument, opcode):
     data.close()
     data_jump.close()
 
+    #case of not pass lit
     return [1, aux_value]
 
+#Check if instructions is correct
 def check_intru(sent):
-    data = open("./dat/instructions.dat", "r")
+    data = open("./dat/instructions.dat", "r") #open list of re to check if instruction is correct 
     for seq in data:
         aux_seq = seq.replace("\n", "").split(";")
         path = re.compile(aux_seq[0])
@@ -100,7 +104,7 @@ def check_intru(sent):
                 return [0, aux_lit[2], aux_lit[1]]
     data.close()
     data = open("./dat/allinstrus.dat", "r")
-    for intru in data:
+    for intru in data: #check type of error
         aux_sent = sent.split(" ")
         if aux_sent[0] == intru.replace("\n", ""):
             return [0, "argument error", aux_sent[1]]

@@ -62,6 +62,7 @@ class MemoryClass:
                 code_start = True
                 count_data = 0
     
+    #export .mem
     def export(self, name_file_to_export):
         w = open("./out/"+name_file_to_export+"_mem.mem", "w")
         for mem in self.memories:
@@ -69,14 +70,15 @@ class MemoryClass:
         w = open("./out/"+name_file_to_export+"_mem.mem", "w")
         return "INFO: Archivo .mem creado con exito"
         
-
+    #Obtain all data of memories
     def getAllMemory(self):
         return self.memories
 
+    #obtain one pos of memory
     def getMemory(self, num_mem):
         return self.memories[num_mem]
 
-    #return error position
+    #return errors position
     def getPosError(self):
         return self.posErrors
 
