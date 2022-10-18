@@ -46,27 +46,32 @@ class MemoryClass:
         file = open(self.fileDir, "r")
 
         for line in file:
-            if cln(line) == "CODE:":
+            if cln(line) == "CODE:": #Star Code need end
                 break
             
-            elif code_start == True: # "DATA:" was found
-                aux_line = "" #Aux line to clean
+            elif code_start == True: # "Code:" was found
+                aux_line = "" 
                 read_line = 0
                 for c in cln(line):
                     if c != " " and read_line == 0:
                         read_line = 1
                     if read_line == 1:
                         aux_line += c
-                self.memories[count_data] = {"name":"ERR", "value":"Estructura incorrecta"}
+                self.memories[count_data] = {"name":"ERR","case":aux_line.split(" ")[0], "type":"Estructura incorrecta"}
+                self.posErrors.append(count_data)
                 for rec in re_case:
                     path = re.compile(rec)
                     aux_match = path.match(aux_line)
                     if aux_match != None and aux_match.group() == aux_line:
-                        self.memories[count_data] = {"name":aux_line.split(" ")[0], "value":aux_line.split(" ")[1]}
-                
+                        aux_value = d.translate([aux_line.split(" ")[1]],"mem")
+                        if aux_value[0]:
+                            self.memories[count_data] = {"name":aux_line.split(" ")[0], "value":aux_value[1]}
+                            self.posErrors.pop(self.posErrors.index(count_data))
+                        else:
+                            self.memories[count_data] = {"name":"ERR","case":aux_line.split(" ")[1],"type":aux_value[2]}
                 count_data += 1
             
-            elif cln(line) == "DATA:": #now code start is found, to after read the instructions lines
+            elif cln(line) == "DATA:": #now code data is found, to after read the instructions lines
                 code_start = True
                 count_data = 0
     
@@ -74,7 +79,8 @@ class MemoryClass:
         if self.checkFile(self.fileDir) == -1: return "ERR :  Presencia de errores - Imposible crear .out"
         self.obtainMemory()
         if len(self.posErrors) != 0: return "ERR :  Presencia de errores - Imposible crear .out"
-        w = open("./out/"+name_file_to_export+"_out.out", "w")
+        w = open("./out/"+name_file_to_export+"_mem.mem", "w")
+        
 
     #redefine file directory
     def setFile(self, _fileDir):
@@ -84,7 +90,7 @@ class MemoryClass:
     def getFile(self):
         return self.fileDir
     
-    #return dictionary with all instructions
+    #return dictionary with all Memories
     def getAllMemory(self):
         self.obtainMemory()
         return self.memories
@@ -94,6 +100,7 @@ class MemoryClass:
         self.obtainMemory()
         return self.memories[num_mem]
 
+    #return error position
     def getPosError(self):
         self.obtainMemory()
         return self.posErrors

@@ -11,4 +11,4 @@ juan:
     JMP 05
     MOV (0b010),A
     JMP juan
-    CALL juan
+    RET 

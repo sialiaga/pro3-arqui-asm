@@ -16,7 +16,7 @@ def translate(argument, opcode):
     data = open("./dat/opcodespecial.dat", "r")
     for spec in data:
         aux_spec = spec.replace("\n", "").split(";")
-        if opcode == aux_spec[1] and "lit"==aux_spec[0]:
+        if (opcode == aux_spec[1] and "lit"==aux_spec[0]) or opcode == "mem":
             for args in argument:
                 aux_arg = args.replace("(", "").replace(")", "")
                 #Hex Case
@@ -85,6 +85,7 @@ def check_intru(sent):
     for intru in data:
         aux_sent = sent.split(" ")
         if aux_sent[0] == intru.replace("\n", ""):
+            print(aux_sent)
             return [0, "argument error", aux_sent[1]]
     return [0, "instruction error", sent.split(" ")[0]]
 

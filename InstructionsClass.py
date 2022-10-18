@@ -3,13 +3,11 @@ import defs as d
 
 class InstructionsClass:
     #constructor
-    def __init__(self, _fileDir=False):
-        self.fileDir = ""
-        if _fileDir != False: self.setFile(_fileDir)
+    def __init__(self, _fileDir):
+        self.fileDir = _fileDir
         
         self.intructions_line = {}
         self.jumps = {}
-        self.fileRead = False
         
         self.numLines = 0
         self.starCode = 0
@@ -17,26 +15,9 @@ class InstructionsClass:
         
         open("./temp/jumps.log", "w").close()
     
-     #check if file exist
-    def checkFile(self, _fileDir):
-        if self.fileRead == True: return
-        
-        if (exists(_fileDir)): #File exist
-            self.fileRead = False
-            self.intructions_line = {}
-            self.jumps = {}
-            self.posErrors = []
-            self.fileDir = _fileDir
-            return 0
-        else: #file not exist
-            print("\"",_fileDir, "\" File not found")
-            return -1
-    
     def obtainJump(self):
-
         code_start = False
         count_line = 0
-        aux_line = ""
 
         cln = lambda line:line.replace("\n", "")
 
@@ -60,10 +41,6 @@ class InstructionsClass:
 
     #obtain and check if instructions is correct
     def obtainInstructions(self):
-        if self.fileRead == True: return
-        if self.checkFile(self.fileDir) == -1: return
-        self.fileRead = True
-
         code_start = False
         count_line = 1
         aux_line = ""
@@ -106,8 +83,6 @@ class InstructionsClass:
         self.numLines = count_line
     
     def export(self, name_file_to_export):
-        if self.checkFile(self.fileDir) == -1: return "ERR :  Presencia de errores - Imposible crear .out"
-        self.obtainInstructions()
         if len(self.posErrors) != 0: return "ERR :  Presencia de errores - Imposible crear .out"
         w = open("./out/"+name_file_to_export+"_out.out", "w")
         for intru in self.intructions_line:
@@ -115,47 +90,32 @@ class InstructionsClass:
         w.close()
         return "INFO: Archivo .out creado con exito"
 
-    #redefine file directory
-    def setFile(self, _fileDir):
-        return self.checkFile(_fileDir)
-
-    #obtain file directory
-    def getFile(self):
-        return self.fileDir
     
     #return position of the file where code start
     def getStarCode(self):
-        self.obtainInstructions()
         return self.starCode
 
     #return numbers lines of the file
     def getNumLines(self):
-        self.obtainInstructions()
         return self.numLines
 
     #return dictionary with all instructions
     def getAllInstructions(self):
-        self.obtainInstructions()
         return self.intructions_line
     
     #return dictionary with jumps and position in instrcution dictionary
     def getAllJumps(self):
-        self.obtainInstructions()
         return self.jumps
 
     #return instruction in line "num_line" passed
     def getInstruction(self, num_line):
-        self.obtainInstructions()
         return self.intructions_line[num_line]
 
     #return postion of label jump passed
     def getJump(self, label):
-        self.obtainInstructions()
         return self.jumps[label]
 
     def getPosError(self):
-        self.obtainInstructions()
-        if self.checkFile(self.fileDir) == -1: return
         return self.posErrors
 
 

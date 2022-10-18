@@ -62,5 +62,5 @@ max:
   MOV (currmax),A
   JMP minmax
 finminmax:
-  RET
+  RET 
 final:
