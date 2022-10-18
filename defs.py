@@ -75,7 +75,7 @@ def translate(argument, opcode):
                 for args in argument:
                     aux_arg = args.replace("(", "").replace(")", "")
                     if aux_mem[0]==aux_arg:
-                        return [1, aux_mem[1]]
+                        return [1, bin8coverter(str(bin(int(aux_mem[1])))[2:])]
             
             return [0, aux_arg, "Label not exist"]
     data.close()

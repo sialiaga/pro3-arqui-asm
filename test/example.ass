@@ -1,17 +1,17 @@
 DATA:
-  lista 0xA0
-  n 0
+  lista #A0
+  n 5
   res 0
   aux 0
 CODE:
 siguiente:
   MOV B,(lista)
-  MOV A,(B)
+  MOV A, (B)
   INC B
   MOV B,(B)
-  CMP A,B
+  CMP A ,B
   JGE comparar
-  MOV (aux),A
+  MOV (aux) , A
   MOV A,B
   MOV B,(aux)
 comparar:
@@ -19,7 +19,7 @@ comparar:
   CMP A,(res)
   JLE revisar
   MOV (res),A
-revisar:
+revisar: 
   MOV A,(n)
   SUB A,1
   MOV (n),A

@@ -47,8 +47,6 @@ class InstructionsClass:
 
         cln = lambda line:line.replace("\n", "")
 
-        self.obtainJump()
-
         file = open(self.fileDir, "r")
 
         for line in file:

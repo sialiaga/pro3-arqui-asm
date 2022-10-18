@@ -51,7 +51,7 @@ class MemoryClass:
                             self.memories[count_data] = {"name":aux_line.split(" ")[0], "value":aux_value[1]}
                             mw = open("./temp/memory.log", "a")
                             aux_fstring = aux_line.split(" ")[0]
-                            mw.write(f"{aux_fstring};{aux_value[1]}\n")
+                            mw.write(f"{aux_fstring};{count_data}\n")
                             mw.close()
                             self.posErrors.pop(self.posErrors.index(count_data))
                         else:
