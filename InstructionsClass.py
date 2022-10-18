@@ -1,4 +1,4 @@
-from os.path import exists
+#Imports
 import defs as d
 
 class InstructionsClass:

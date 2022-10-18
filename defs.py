@@ -1,10 +1,8 @@
+#Imports
 import re
 
 def translate(argument, opcode): #Argument is translate a 8bit value in lit or dir case
     aux_value = "00000000" #main value, persist in the case that opcode not in lit or dir opcode cases
-
-    notFoundLabel = 1
-    notFoundMemory = 1
 
     overflow = lambda value : 0 if value<256 else 1 #check overflow
     overflow_c2 = lambda value : 0 if value<128 else 1 #check overflow in c'2 case
